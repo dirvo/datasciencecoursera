@@ -56,9 +56,8 @@ read.and.merge.data = function() {
   merged.subject <- rbind(training.subject, test.subject)
   
   message("Extract mean and standard deviation for each measurement")
-  merged.features <- select(merged.features, contains("mean\\(\\)"), contains("std\\(\\)")) 
-  #features.to.be.extracted <- grepl("mean()|std()", feature.labels)
-  #merged.features = merged.features[,features.to.be.extracted]
+  features.to.be.extracted <- grepl("mean()|std()", feature.labels)
+  merged.features = merged.features[,features.to.be.extracted]
   
   message("Add descriptive activity names")
   merged.activity[,2] <- activity.labels[merged.activity[,1]]
@@ -74,7 +73,7 @@ data <- read.and.merge.data()
 data %>%
   # Generate the new tidy dataset with the average of each variable
   # for each subject and each activity.
-  group_by(activity.id, activity.description, subject.id) %>%
+  group_by(subject.id, activity.id, activity.description) %>%
   # compute the average of the selected features
   summarise_each(funs(mean)) %>%
   # generate the output txt file
